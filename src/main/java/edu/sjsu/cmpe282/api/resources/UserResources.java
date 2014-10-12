@@ -36,7 +36,7 @@ public class UserResources {
 		
 		System.out.print("user created: "+user.getFirstName());
 		userdao.addUser(user);
-		return Response.status(201).entity(user).build();
+		return Response.status(201).header("Access-Control-Allow-Origin" , "origin-list-or-null").header("Access-Control-Allow-Origin" , "*").entity(user).build();
 	}
 
 	@POST
@@ -46,7 +46,7 @@ public class UserResources {
 	{
 		System.out.print("User check");
 		//userdao.checkUser(user);
-		return Response.status(201).entity(userdao.checkUser(user)).build();
+		return Response.status(201).header("Access-Control-Allow-Origin" , "origin-list-or-null").header("Access-Control-Allow-Origin", "*").entity(userdao.checkUser(user)).build();
 		//return user;
 	}
 
