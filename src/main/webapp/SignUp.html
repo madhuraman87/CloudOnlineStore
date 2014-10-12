@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title> Cloud Online Store </title>
+	<link type="text/css" rel="stylesheet" href="assets/css/bootstrap.css"/>
+</head>
+
+<body>
+<div class="container">
+	<h1><a href="#">Cloud Online Store</a></h1>
+	
+	<div class="navbar">
+              <div class="navbar-inner">
+                <div class="container">
+                  <ul class="nav">
+                    <li class="active"><a href="home.html">Home</a></li>
+					<li class="active span5"></li>
+					<li class="span2"><a href="SignUp.html">Sign Up</a></li>
+                       <li class="span2"><a href="SignIn.html">Sign In</a></li>
+                    <li><a href="#">My Cart</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+	<img src="assets/img/onlineshop.jpg" class="span5" />
+
+	<form class="well span6" onsubmit="return false;">
+		<input type="text" id="firstName" class="span3" placeholder="First Name"/>
+		<input type="text" id="lastName" class="span3" placeholder="Last Name" />
+		<input type="text" id="mailId" class="span6" placeholder="Your Email" />
+		<input type="password" id="passwd" class="span6" placeholder="Enter Password" />
+		<input type="password" id="repasswd" class="span6" placeholder="Re-Enter Password" />
+		<button class="btn btn-primary" id="signUp" onclick="signUpfun()">Sign Up</button>
+		<button class="btn" id="clear"> Clear </button>
+	</form>
+	
+	</div>
+	<script src="assets/js/bootstrap.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="assets/js/signUp.js"></script>
+	
+</body>
+</html> 

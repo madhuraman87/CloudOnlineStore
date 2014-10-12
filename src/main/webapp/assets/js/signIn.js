@@ -14,7 +14,7 @@ function LogInfun(){
 				//success: function () { //success(data); }
 			success: function(data, textStatus, jqXHR){
 					alert("you are logged in");
-                    window.location = "../../Catalog.html";
+                    window.location = "Catalog.html";
 				},
 			error: function(textStatus, jqXHR,errorThrown){
 				alert(textStatus+" "+jqXHR);
