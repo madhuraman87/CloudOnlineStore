@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.bson.BasicBSONObject;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -44,7 +46,7 @@ public class UserDAO
 				System.out.println("Unable to find MySQL JDBC Driver");
 				e.printStackTrace();
 			}
-		connect = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/cmpe282","root","July@2787");
+		connect = DriverManager.getConnection("jdbc:mysql://rdsmysqlinstance.cucnzttohznf.us-west-1.rds.amazonaws.com:3306/cmpe282","rootuser","madhuajeeth");
 		}
 		catch (SQLException se)
 		{
@@ -125,10 +127,23 @@ public class UserDAO
 		if(cursor.hasNext()) {
 			BasicDBObject userDocument = (BasicDBObject) cursor.next();
 			ArrayList<DBObject> cartlist = (ArrayList<DBObject>) userDocument.get("cart");
-			DBObject newCartItem = new BasicDBObject();
-			newCartItem.put("productId", productId);
-			newCartItem.put("quantity", quantity);
-			cartlist.add(newCartItem);		
+			boolean productFound = false;
+			for(DBObject cartItem : cartlist) {
+				if (cartItem.get("productId").equals(productId)) {
+				productFound = true;
+				Integer temp_quantity = (Integer) cartItem.get("quantity");
+				int newquantity = temp_quantity + quantity;
+				cartItem.put("quantity", newquantity);
+				break;
+				}				
+			}
+			if(!productFound) {
+				DBObject newCartItem = new BasicDBObject();
+				newCartItem.put("productId", productId);
+			    newCartItem.put("quantity", quantity);
+			    cartlist.add(newCartItem);			    
+			}
+				
 			mongoDbUsersCollection.update(queryOptions, new BasicDBObject("$set", new BasicDBObject("cart", cartlist)));
 			//db.users.update({mailId:"sandeep@cat.com"}, {$set:{cart: [{productId:"3", quantity: 2}]}})
 		}
