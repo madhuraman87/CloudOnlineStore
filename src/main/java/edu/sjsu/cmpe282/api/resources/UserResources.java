@@ -1,20 +1,20 @@
 package edu.sjsu.cmpe282.api.resources;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import edu.sjsu.cmpe282.dao.*;
-import edu.sjsu.cmpe282.dto.*;
+import edu.sjsu.cmpe282.dao.UserDAO;
+import edu.sjsu.cmpe282.dto.User;
 
 @Path("/users")
-//@Produces(MediaType.APPLICATION_JSON)
-//@Consumes(MediaType.APPLICATION_JSON)
 public class UserResources {
 
 	private UserDAO userdao = new UserDAO();
@@ -44,10 +44,14 @@ public class UserResources {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response signIn(User user) throws ClassNotFoundException
 	{
-		System.out.print("User check");
+		System.out.println("User check");
 		//userdao.checkUser(user);
 		return Response.status(201).header("Access-Control-Allow-Origin" , "origin-list-or-null").header("Access-Control-Allow-Origin", "*").entity(userdao.checkUser(user)).build();
-		//return user;
 	}
-
+	
+	@POST
+	@Path("/addToCart")	
+	public Response addToCart(@QueryParam("mailId") String mailId, @QueryParam("productId") String productId, @QueryParam("quantity") int quantity) {
+		return Response.status(201).build();		
+	}
 }
