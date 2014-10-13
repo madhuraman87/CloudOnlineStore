@@ -12,15 +12,15 @@ function LogInfun(){
 			dataType: 'json',
 			data : formToJSON(),
 				//success: function () { //success(data); }
-			success: function(data, textStatus, jqXHR){
+			success: function(data, textStatus, jqXHR) {
 					//store email in Session Storage
 					sessionStorage.setItem('user_mailId', $('#mailId').val());
 					sessionStorage.setItem('logInTime', new Date($.now()));
-					alert("you are logged in");
+					alert("You are logged in");
                     window.location = "Catalog.html";
 				},
 			error: function(textStatus, jqXHR,errorThrown){
-				alert(textStatus+" "+jqXHR);
+				alert(textStatus + " " + jqXHR);
 			}
 
 		});
