@@ -1,8 +1,6 @@
 function LogInfun(){
 
 	var URL = "http://localhost:8080/CloudOnlineStore/rest/users/signin";
-
-	//alert("signin button clicked"+formToJSON());
 	
 	$.ajax({
 			type: "POST",
