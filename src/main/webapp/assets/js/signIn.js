@@ -13,6 +13,9 @@ function LogInfun(){
 			data : formToJSON(),
 				//success: function () { //success(data); }
 			success: function(data, textStatus, jqXHR){
+					//store email in Session Storage
+					sessionStorage.setItem('user_mailId', $('#mailId').val());
+					sessionStorage.setItem('logInTime', new Date($.now()));
 					alert("you are logged in");
                     window.location = "Catalog.html";
 				},
