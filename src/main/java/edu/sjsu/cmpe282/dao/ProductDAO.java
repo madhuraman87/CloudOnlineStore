@@ -1,12 +1,16 @@
 package edu.sjsu.cmpe282.dao;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+import edu.sjsu.cmpe282.dto.Product;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mongodb.*;
-
-import edu.sjsu.cmpe282.dto.*;
 
 
 public class ProductDAO {
@@ -119,4 +123,42 @@ public class ProductDAO {
 		return product_list;
 	}
 
+    public Product getProductDetailsByProductId(String productId) {
+        com.mongodb.DBObject productIdFilter = new com.mongodb.BasicDBObject();
+        productIdFilter.put("prodID", productId);
+        com.mongodb.DBCursor cursor = table.find(productIdFilter);
+
+        Product product = null;
+
+        try {
+            if(cursor.hasNext())
+            {
+                BasicDBObject obj = (BasicDBObject)cursor.next();
+                String prodId = obj.getString("prodID");
+                String name = obj.getString("name");
+                String desc = obj.getString("desc");
+                int price = obj.getInt("price");
+                int inventory = obj.getInt("inventory");
+                String catalog = obj.getString("Catalog");
+                product = new Product();
+                product.setProdId(prodId);
+                product.setName(name);
+                product.setDesc(desc);
+                product.setPrice(price);
+                product.setInventory(inventory);
+                product.setCatalog(catalog);
+            }
+
+        }
+        catch(com.mongodb.MongoException me)
+        {
+            me.printStackTrace();
+        }
+        finally
+        {
+            cursor.close();
+        }
+
+        return product;
+    }
 }

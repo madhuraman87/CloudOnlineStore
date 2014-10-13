@@ -44,7 +44,7 @@ public class ProductResources {
     @GET
     @Path("/productInfo/{productId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProductDetails(@QueryParam("catalog") String productId) {
-        return Response.status(201).build();
+    public Response getProductDetails(@javax.ws.rs.PathParam("productId") String productId) {
+        return Response.status(201).entity(productdao.getProductDetailsByProductId(productId)).build();
     }
 }
