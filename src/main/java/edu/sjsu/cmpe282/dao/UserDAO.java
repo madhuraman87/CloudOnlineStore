@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.bson.BasicBSONObject;
 
@@ -18,6 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
+import edu.sjsu.cmpe282.dto.CartItem;
 import edu.sjsu.cmpe282.dto.User;
 
 /**
@@ -99,6 +101,15 @@ public class UserDAO
 		{
 			se.printStackTrace();
 		}
+		finally{
+			
+			try {
+				stmt.close();
+				connect.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
 		
 		return true;
 	}
@@ -116,12 +127,22 @@ public class UserDAO
 		catch (SQLException se){
 			se.printStackTrace();			
 		}
+		finally{
+			
+			try {
+				stmt.close();
+				connect.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
 		return user.getPasswd().equals(origPasswd);
 	}
 	
 	public void addItemToCart(String mailId, String productId, int quantity) {				
 		//find user document
 		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
+		try {
 		DBCursor cursor = mongoDbUsersCollection.find(queryOptions);		
 		//get carts attribute
 		if(cursor.hasNext()) {
@@ -148,15 +169,58 @@ public class UserDAO
 			//db.users.update({mailId:"sandeep@cat.com"}, {$set:{cart: [{productId:"3", quantity: 2}]}})
 		}
 		cursor.close();
+		}
+		catch (MongoException me) 
+		{
+			me.printStackTrace();
+		}
 	}
 	
-//	finally{
-//		try {
-//			stmt.close();
-//			connect.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//     }
-
+	public ArrayList<DBObject> displayItemsFromCart(String mailId){
+		ArrayList<DBObject> cartlist = new ArrayList<DBObject>();
+		//find user document
+		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
+		try {
+			DBCursor cursor = mongoDbUsersCollection.find(queryOptions);		
+			//get carts attribute
+			if(cursor.hasNext()) {
+				BasicDBObject userDocument = (BasicDBObject) cursor.next();
+				cartlist = (ArrayList<DBObject>) userDocument.get("cart");	
+			}
+		cursor.close();
+		}	
+		catch (MongoException me) 
+		{
+			me.printStackTrace();
+		}
+		return cartlist;
+	}
+	
+	public void removeItemFromCart(String mailId, String productId) {
+		//find user document
+		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
+		try {
+		DBCursor cursor = mongoDbUsersCollection.find(queryOptions);		
+		//get carts attribute
+		if(cursor.hasNext()) {
+			BasicDBObject userDocument = (BasicDBObject) cursor.next();
+			ArrayList<DBObject> cartlist = (ArrayList<DBObject>) userDocument.get("cart");
+			Iterator<DBObject> cartListIterator = cartlist.iterator();
+			for(; cartListIterator.hasNext();) {
+				DBObject cartItem = cartListIterator.next();
+				if (cartItem.get("productId").equals(productId)) {
+					cartListIterator.remove();
+					break;
+				}
+			}
+		mongoDbUsersCollection.update(queryOptions, new BasicDBObject("$set", new BasicDBObject("cart", cartlist)));
+		}
+		cursor.close();
+		}
+		catch (MongoException me) 
+		{
+			me.printStackTrace();
+		}
+	}
+	
 }

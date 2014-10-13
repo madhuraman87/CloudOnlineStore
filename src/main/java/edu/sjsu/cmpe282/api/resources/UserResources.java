@@ -54,4 +54,18 @@ public class UserResources {
 		userdao.addItemToCart(mailId, productId, quantity);
 		return Response.status(201).build();		
 	}
+	
+	@GET
+	@Path("/displayCart")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response displayCart(@QueryParam("mailId") String mailId) {
+		return Response.status(201).entity(userdao.displayItemsFromCart(mailId)).build();		
+	}
+	
+	@POST
+	@Path("/removeFromCart")	
+	public Response removeFromCart(@QueryParam("mailId") String mailId, @QueryParam("productId") String productId) {
+		userdao.removeItemFromCart(mailId, productId);
+		return Response.status(201).build();		
+	}
 }
