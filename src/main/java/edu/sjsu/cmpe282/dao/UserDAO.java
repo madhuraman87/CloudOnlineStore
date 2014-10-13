@@ -2,10 +2,12 @@ package edu.sjsu.cmpe282.dao;
 
 import java.net.UnknownHostException;
 import java.sql.*;
+import java.util.ArrayList;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
@@ -77,8 +79,8 @@ public class UserDAO
 				 stmt.executeUpdate(query);
 				 BasicDBObject document = new BasicDBObject();
 					document.put("mailId", user.getMailId());
-					document.put("cart", "[]");
-					document.put("orderHistory", "[]");
+					document.put("cart", new ArrayList());
+					document.put("orderHistory", new ArrayList());
 				 mongoDbUsersTable.insert(document);
 			}
 		}
@@ -110,7 +112,19 @@ public class UserDAO
 		return user.getPasswd().equals(origPasswd);
 	}
 	
-	
+	public void addItemToCart(String mailId, String prodId, int quantity) {
+		//find user document
+		mongoDbUsersTable.update(new BasicDBObject("mailId", mailId), );
+		DBCursor cursor = mongoDbUsersTable.find(new BasicDBObject("mailId", mailId));
+		//get carts attribute
+		if(cursor.hasNext()) {
+			BasicDBObject userDocument = (BasicDBObject) cursor.next();
+			ArrayList<CartItem> cartlist = (ArrayList<CartItem>) userDocument.get("cart");
+			cartlist.add(new CartItem(prodId, quantity));
+			userDocument.put("cart", cartlist);
+		}
+		cursor.close();
+	}
 	
 //	finally{
 //		try {

@@ -52,6 +52,7 @@ public class UserResources {
 	@POST
 	@Path("/addToCart")	
 	public Response addToCart(@QueryParam("mailId") String mailId, @QueryParam("productId") String productId, @QueryParam("quantity") int quantity) {
+		userdao.addItemToCart(mailId, productId, quantity);
 		return Response.status(201).build();		
 	}
 }
