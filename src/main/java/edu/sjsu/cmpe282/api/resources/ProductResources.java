@@ -24,7 +24,7 @@ public class ProductResources {
 		
 		return Response.status(201).entity(productdao.addProduct(product)).build();
 	}
-	
+	 
 	@GET
 	@Path("/listallproducts")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -102,12 +102,14 @@ public class ProductDAO {
 				String desc = obj.getString("desc");
 				int price = obj.getInt("price");
 				int inventory = obj.getInt("inventory");
+				String product_catalog = obj.getString("Catalog");
 				Product product = new Product();
 				product.setProdId(prodId);
 				product.setName(name);
 				product.setDesc(desc);
 				product.setPrice(price);
 				product.setInventory(inventory);
+				product.setCatalog(product_catalog);
 				product_list.add(product);
 			}
 			cursor.close();
