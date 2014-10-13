@@ -1,17 +1,22 @@
 package edu.sjsu.cmpe282.dao;
 
 import java.net.UnknownHostException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
-import edu.sjsu.cmpe282.dto.*;
+import edu.sjsu.cmpe282.dto.User;
 
 /**
  * @author madhuajeeth
@@ -23,7 +28,7 @@ public class UserDAO
 	private Statement stmt;
 	private ResultSet rs;
 	
-	private DBCollection mongoDbUsersTable;
+	private DBCollection mongoDbUsersCollection;
 
 	// Constructor with JDBC connection
 	public UserDAO() 
@@ -49,7 +54,7 @@ public class UserDAO
 		try{			
 			MongoClient mongo = new MongoClient("localhost", 27017);
 			DB db = mongo.getDB("cmpe282db");		 
-			mongoDbUsersTable = db.getCollection("users");
+			mongoDbUsersCollection = db.getCollection("users");
 		}
 		catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -81,7 +86,7 @@ public class UserDAO
 					document.put("mailId", user.getMailId());
 					document.put("cart", new ArrayList());
 					document.put("orderHistory", new ArrayList());
-				 mongoDbUsersTable.insert(document);
+				 mongoDbUsersCollection.insert(document);
 			}
 		}
 		catch (MongoException me) 
@@ -112,16 +117,20 @@ public class UserDAO
 		return user.getPasswd().equals(origPasswd);
 	}
 	
-	public void addItemToCart(String mailId, String prodId, int quantity) {
+	public void addItemToCart(String mailId, String productId, int quantity) {				
 		//find user document
-		mongoDbUsersTable.update(new BasicDBObject("mailId", mailId), );
-		DBCursor cursor = mongoDbUsersTable.find(new BasicDBObject("mailId", mailId));
+		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
+		DBCursor cursor = mongoDbUsersCollection.find(queryOptions);		
 		//get carts attribute
 		if(cursor.hasNext()) {
 			BasicDBObject userDocument = (BasicDBObject) cursor.next();
-			ArrayList<CartItem> cartlist = (ArrayList<CartItem>) userDocument.get("cart");
-			cartlist.add(new CartItem(prodId, quantity));
-			userDocument.put("cart", cartlist);
+			ArrayList<DBObject> cartlist = (ArrayList<DBObject>) userDocument.get("cart");
+			DBObject newCartItem = new BasicDBObject();
+			newCartItem.put("productId", productId);
+			newCartItem.put("quantity", quantity);
+			cartlist.add(newCartItem);		
+			mongoDbUsersCollection.update(queryOptions, new BasicDBObject("$set", new BasicDBObject("cart", cartlist)));
+			//db.users.update({mailId:"sandeep@cat.com"}, {$set:{cart: [{productId:"3", quantity: 2}]}})
 		}
 		cursor.close();
 	}
