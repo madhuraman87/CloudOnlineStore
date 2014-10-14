@@ -9,8 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-//import org.bson.BasicBSONObject;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -19,7 +17,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
-//import edu.sjsu.cmpe282.dto.CartItem;
 import edu.sjsu.cmpe282.dto.User;
 
 /**
@@ -176,7 +173,7 @@ public class UserDAO
 		}
 	}
 	
-	public ArrayList<DBObject> displayItemsFromCart(String mailId){
+	public ArrayList<DBObject> getCartItemList(String mailId) {
 		ArrayList<DBObject> cartlist = new ArrayList<DBObject>();
 		//find user document
 		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
@@ -193,6 +190,7 @@ public class UserDAO
 		{
 			me.printStackTrace();
 		}
+		
 		return cartlist;
 	}
 	

@@ -10,13 +10,16 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import edu.sjsu.cmpe282.dao.CartDAO;
+import edu.sjsu.cmpe282.dao.ProductDAO;
 import edu.sjsu.cmpe282.dao.UserDAO;
 import edu.sjsu.cmpe282.dto.User;
 
 @Path("/users")
 public class UserResources {
 
-	private UserDAO userdao = new UserDAO();
+	private UserDAO userDao = new UserDAO();
+	private CartDAO cartDao = new CartDAO();	
 	
 	@GET
 	@Path("/{param}")
@@ -34,7 +37,7 @@ public class UserResources {
 	public Response signUp(User user) throws ClassNotFoundException {
 		
 		System.out.print("user created: "+user.getFirstName());
-		userdao.addUser(user);
+		userDao.addUser(user);
 		return Response.status(201).header("Access-Control-Allow-Origin" , "origin-list-or-null").header("Access-Control-Allow-Origin" , "*").entity(user).build();
 	}
 
@@ -45,13 +48,13 @@ public class UserResources {
 	{
 		System.out.println("User check");
 		//userdao.checkUser(user);
-		return Response.status(201).header("Access-Control-Allow-Origin" , "origin-list-or-null").header("Access-Control-Allow-Origin", "*").entity(userdao.checkUser(user)).build();
+		return Response.status(201).header("Access-Control-Allow-Origin" , "origin-list-or-null").header("Access-Control-Allow-Origin", "*").entity(userDao.checkUser(user)).build();
 	}
 	
 	@POST
 	@Path("/addToCart")	
 	public Response addToCart(@QueryParam("mailId") String mailId, @QueryParam("productId") String productId, @QueryParam("quantity") int quantity) {
-		userdao.addItemToCart(mailId, productId, quantity);
+		userDao.addItemToCart(mailId, productId, quantity);
 		return Response.status(201).build();		
 	}
 	
@@ -59,13 +62,13 @@ public class UserResources {
 	@Path("/displayCart")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response displayCart(@QueryParam("mailId") String mailId) {
-		return Response.status(201).entity(userdao.displayItemsFromCart(mailId)).build();		
+		return Response.status(201).entity(cartDao.getCartDetails(mailId)).build();
 	}
 	
 	@POST
 	@Path("/removeFromCart")	
 	public Response removeFromCart(@QueryParam("mailId") String mailId, @QueryParam("productId") String productId) {
-		userdao.removeItemFromCart(mailId, productId);
+		userDao.removeItemFromCart(mailId, productId);
 		return Response.status(201).build();		
 	}
 }

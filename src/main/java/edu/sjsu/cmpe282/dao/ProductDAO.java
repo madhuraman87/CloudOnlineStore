@@ -128,8 +128,7 @@ public class ProductDAO {
     public Product getProductDetailsByProductId(String productId) {
     	BasicDBObject productIdFilter = new BasicDBObject();
         productIdFilter.put("prodID", productId);
-        
-        List<Product> product_list = new ArrayList<Product>();
+                
         Product product = null;
         try {
         	DBCursor cursor = table.find(productIdFilter);
