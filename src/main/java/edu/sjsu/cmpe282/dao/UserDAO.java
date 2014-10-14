@@ -223,9 +223,8 @@ public class UserDAO
 		}
 	}
 	
-	public boolean orderIsValid(String mailId, String ccn) {
-		boolean orderValid = true;		
-		return orderValid && isCreditCardNumberValid(ccn);
+	public boolean orderIsValid(String userEmailId, String ccn) {
+		return isCreditCardNumberValid(ccn);
 	}
 	
 	private static boolean isCreditCardNumberValid(String ccn) {
