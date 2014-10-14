@@ -20,7 +20,7 @@ import edu.sjsu.cmpe282.dto.User;
 public class UserResources {
 
 	private UserDAO userDao = DaoContainer.userDao;
-	private CartDAO cartDao = DaoContainer.cartDao;	
+	private CartDAO cartDao = DaoContainer.cartDao;
 	
 	@GET
 	@Path("/{param}")
@@ -53,10 +53,14 @@ public class UserResources {
 	}
 	
 	@POST
-	@Path("/addToCart")	
+	@Path("/addToCart")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addToCart(@QueryParam("mailId") String mailId, @QueryParam("productId") String productId, @QueryParam("quantity") int quantity) {
-		userDao.addItemToCart(mailId, productId, quantity);
-		return Response.status(201).build();
+		final boolean validAddCommand = userDao.isQuantityValid(mailId, productId, quantity);
+		if(validAddCommand) {
+			userDao.addItemToCart(mailId, productId, quantity);
+		}
+		return Response.status(201).entity(validAddCommand).build();
 	}
 	
 	@GET

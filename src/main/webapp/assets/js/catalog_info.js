@@ -62,8 +62,12 @@ $("#addCartButton").click(
 				type: "POST",
 				url: addToCartUrl,
 				contentType: "application/json",
+				dataType:"json",
 				success: function(data, textStatus, jqXHR) {
-					alert("Product added to cart");
+					if(data)
+						alert("Product added to cart");
+					else
+						alert("Quantity is too high");
 				},
 				error: function(textStatus, jqXHR, errorThrown) {
 					alert(textStatus + " " + jqXHR);

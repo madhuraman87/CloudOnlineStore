@@ -19,6 +19,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 import edu.sjsu.cmpe282.dto.CartItemProductDetail;
+import edu.sjsu.cmpe282.dto.Product;
 import edu.sjsu.cmpe282.dto.User;
 
 /**
@@ -257,5 +258,22 @@ public class UserDAO
 		return null;
 	}
 	
+	public boolean isQuantityValid(final String userEmailId, final String productId, final int addQuantity) {
+		final int cartQuantity = getProductQuantityFromUserCart(userEmailId, productId);
+		final int inventory = DaoContainer.productDao.getProductDetailsByProductId(productId).getInventory();
+		if(cartQuantity + addQuantity <= inventory)
+			return true;
+		return false;
+	}
+
+	private int getProductQuantityFromUserCart(String userEmailId, String productId) {
+		List<CartItemProductDetail> cipdList = DaoContainer.cartDao.getCartDetails(userEmailId);
+		for(CartItemProductDetail cipd : cipdList) {
+			if(productId.equals(cipd.getProductId())) {
+				return cipd.getQuantity();
+			}
+		}
+		return 0;
+	}
 	
 }
