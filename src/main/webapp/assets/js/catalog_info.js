@@ -49,7 +49,13 @@ $("#addCartButton").click(
 		function() {
 			var productId = $("#productid_select").val();
 			var quantity = $("#quantity_input").val();
+
 			//add validation for negative quantity
+			if(quantity <= 0) {
+				alert("Invalid quantity");
+				return;
+			}
+
 			var user_mailId = sessionStorage.getItem("user_mailId");
 			var addToCartUrl = "http://localhost:8080/CloudOnlineStore/rest/users/addToCart?mailId=" + user_mailId + "&productId=" + productId +  "&quantity=" + quantity;
 			$.ajax({
