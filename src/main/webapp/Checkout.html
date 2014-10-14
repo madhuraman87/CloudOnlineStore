@@ -28,12 +28,15 @@
         </div>        
     </div>
     
-    <h1>Shopping cart</h1> <br />
-    <select id="productId_selector"> </select>
-    <input type="button" id="removeFromCartButton" value="Remove from cart" />
+    <h1>Order summary</h1> <br />    
     
-    <div id="cartTable" class="span11">  </div> <br />    
-    <input type="button" value="Checkout" onclick="location.href='Checkout.html';">    
+    <div id="cartTable" class="span11">  </div> <br />
+    <fieldset>
+	    Total number of items: <span id="numItems"></span> <br />
+	    Amount: <span id="amountDisplay"></span> <br />
+	    Credit card number: <input type="number" id="creditCardInput">
+	    <input type="button" value="Place order">
+    </fieldset>
 </div>
 <script src="assets/js/bootstrap.js"></script>
 <script src="assets/js/cart_info.js"></script>
