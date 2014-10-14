@@ -197,6 +197,27 @@ public class UserDAO
 		return cartlist;
 	}
 	
+	public ArrayList<ArrayList<DBObject>> getOrderHistoryList(String mailId) {
+		ArrayList<ArrayList<DBObject>> orderlist = new ArrayList<ArrayList<DBObject>>();
+		//find user document
+		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
+		try {
+			DBCursor cursor = usersCollection.find(queryOptions);		
+			//get carts attribute
+			if(cursor.hasNext()) {
+				BasicDBObject userDocument = (BasicDBObject) cursor.next();
+				orderlist = (ArrayList<ArrayList<DBObject>>) userDocument.get("orderHistory");	
+			}
+		cursor.close();
+		}	
+		catch (MongoException me) 
+		{
+			me.printStackTrace();
+		}
+		
+		return orderlist;
+	}
+	
 	public void removeItemFromCart(String mailId, String productId) {
 		//find user document
 		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
@@ -287,6 +308,23 @@ public class UserDAO
 			}
 		}
 		return 0;
+	}
+	
+	public List<List<CartItemProductDetail>> getOrderDetails(String mailId) {
+		List<List<CartItemProductDetail>> finalorderList = new ArrayList<List<CartItemProductDetail>>();
+		ArrayList<ArrayList<DBObject>> orderHistoryList = DaoContainer.userDao.getOrderHistoryList(mailId);
+		for(ArrayList<DBObject> orderItem : orderHistoryList) {
+			List<CartItemProductDetail> orderList = new ArrayList<CartItemProductDetail>();
+			for(DBObject item : orderItem){
+				String productId = (String) item.get("productId");
+				int quantity = (Integer) item.get("quantity");
+				Product product = DaoContainer.productDao.getProductDetailsByProductId(productId);
+				CartItemProductDetail oipd = new CartItemProductDetail(product, quantity);
+				orderList.add(oipd);				
+			}	
+			finalorderList.add(orderList);
+		}
+		return finalorderList;
 	}
 	
 }

@@ -16,7 +16,7 @@ import edu.sjsu.cmpe282.dao.OrderDAO;
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrderResources {
 
-	private OrderDAO orderdao = DaoContainer.orderDao;
+	/*private OrderDAO orderdao = DaoContainer.orderDao;
 	
 	@GET
 	@Path("/orderhistory/{userId}")
@@ -25,5 +25,5 @@ public class OrderResources {
 		
 		return Response.status(201).entity(orderdao.getOrderById(userId)).build();
 	}
-
+*/
 }

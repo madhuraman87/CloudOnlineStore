@@ -20,17 +20,18 @@
         <div class="navbar-inner">
             <div class="container">
                 <ul class="nav">
-                    <li class="active"><a href="Home.html">Home</a></li>
+                    <li class="active"><a href="Catalog.html">Catalog</a></li>
                        <li class="active span5"></li>
-                       <li class="span2"><a href="SignUp.html">Sign Up</a></li>
-                       <li class="span2"><a href="SignIn.html">Sign In</a></li>
-                    <li><a href="Cart.html">My Cart</a></li>
+                       <li class="span2"><a href="OrderHistory.html">Order History</a></li>
+                       <li class="span2"><a href="Cart.html">My Cart</a></li>
+                       <li><a href="SignOut.html" id="signout">Sign Out</a></li>
                 </ul>
             </div>
             
         </div>
     </div>
     <select id="productid_select">    	
+    <option value='' disabled selected style='display:none;'>Choose ProductId from list</option>
     </select>
     <input type="number" id="quantity_input">
     <input type="button" id="addCartButton" value="Add to cart"></input>
@@ -43,5 +44,6 @@
 <!-- <script src="assets/js/catalog.js"></script> -->
 <script src="assets/js/purl.js"></script>
 <script src="assets/js/catalog_info.js"></script>
+<script src="assets/js/signout.js"></script>
 </body>
 </html> 

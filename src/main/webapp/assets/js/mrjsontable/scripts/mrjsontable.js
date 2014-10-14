@@ -32,8 +32,8 @@
         $.each(opts.columns, function (index, item) {
             var $th = $("<th>").attr("data-i", index);
 
-            var $cb = $("<input>", { "type": "checkbox", "id": "cb" + thisSelector + index, value: index, checked: !item.starthidden, "data-i": index }).bind("change", opts.onHiddenCBChange).appendTo($visibleColumnsCBList);
-            var $cblabel = $('<label />', { 'for': 'cb' + thisSelector + index, text: item.heading }).appendTo($visibleColumnsCBList);
+            //var $cb = $("<input>", { "type": "checkbox", "id": "cb" + thisSelector + index, value: index, checked: !item.starthidden, "data-i": index }).bind("change", opts.onHiddenCBChange).appendTo($visibleColumnsCBList);
+            //var $cblabel = $('<label />', { 'for': 'cb' + thisSelector + index, text: item.heading }).appendTo($visibleColumnsCBList);
 
             if (item.starthidden)
             {

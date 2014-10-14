@@ -84,4 +84,11 @@ public class UserResources {
 			userDao.placeOrder(mailId);
 		return Response.status(201).build();		
 	}
+	
+	@GET
+	@Path("/displayOrderHistory")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response displayOrderHistory(@QueryParam("mailId") String mailId) {
+		return Response.status(201).entity(userDao.getOrderDetails(mailId)).build();
+	}
 }
