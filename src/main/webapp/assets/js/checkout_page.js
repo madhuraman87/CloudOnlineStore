@@ -48,6 +48,17 @@ $( document ).ready(function() {
 $("#PlaceOrderButton").click(
 		function() {
 			var ccn = $("#creditCardInput").val();
+			var number = /[0-9]{16}/;
+			if (!(number.test(ccn))){
+				alert("Enter the 16 digit Credit Card Numer");
+				$("input:text:visible:first").focus();
+				return;
+			}
+			if ((ccn == "" || ccn == null)){
+				alert("Enter the Credit Card Numer");
+				$("input:text:visible:first").focus();
+				return;
+			}
 			var userEmailId = sessionStorage.getItem("user_mailId");
 			var placeOrderUrl = "http://localhost:8080/CloudOnlineStore/rest/users/placeOrder?mailId=" + userEmailId + "&ccn=" + ccn;
 			$.ajax({
