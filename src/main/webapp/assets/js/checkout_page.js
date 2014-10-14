@@ -1,14 +1,18 @@
 $( document ).ready(function() {
 	var user_mailId = sessionStorage.getItem('user_mailId');
-	$.getJSON("http://localhost:8080/CloudOnlineStore/rest/users/displayCart?mailId="+user_mailId, function(data) {
-		//fill dropdown menu for remove from cart
+	$.getJSON("http://localhost:8080/CloudOnlineStore/rest/users/displayCart?mailId="+user_mailId, function(data) {	
+		//display total number of items		
+		$("#numProducts").html(data.length);
+		
+		//calculate total amount and display
+		var totalAmount = 0;
 		$.each(data, function(index, product) {
-			var productId = product.productId;
-			$("#productId_selector")
-			.append($('<option>', { productId : index }).text(productId));
+			totalAmount += product.price*product.quantity;
 		});
-
+		$("#amountDisplay").html(totalAmount);
+		
 		//display cart table
+		//TODO: move this portion out to a function that is then called from cart_info.js and here
 		$("#cartTable").mrjsontable({	
             columns: [
                 new $.fn.mrjsontablecolumn({
