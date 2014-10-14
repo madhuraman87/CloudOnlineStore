@@ -125,7 +125,7 @@ public class ProductDAO {
 		return product_list;
 	}
 
-    public List<Product> getProductDetailsByProductId(String productId) {
+    public Product getProductDetailsByProductId(String productId) {
     	BasicDBObject productIdFilter = new BasicDBObject();
         productIdFilter.put("prodID", productId);
         
@@ -149,7 +149,6 @@ public class ProductDAO {
                 product.setPrice(price);
                 product.setInventory(inventory);
                 product.setCatalog(catalog);
-                product_list.add(product);
             }
         	cursor.close();
         }
@@ -158,6 +157,6 @@ public class ProductDAO {
             me.printStackTrace();
         }
         
-        return product_list;
+        return product;
     }
 }
