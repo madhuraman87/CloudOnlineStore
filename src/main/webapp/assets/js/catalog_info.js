@@ -10,7 +10,8 @@ $( document ).ready(function() {
 		          .append($('<option>', { productId : index })
 		          .text(productId));
 		});
-		
+
+
 		//display products in catalog
 		$("#mydiv").mrjsontable({	
             columns: [
@@ -44,12 +45,22 @@ $( document ).ready(function() {
 	});
 });
 
-/*$.each(data, function(key, val) {
-    var tr=$('<tr></tr>');
-    $.each(val, function(k, v){
-        $('<td>'+v+'</td>').appendTo(tr);
-    });
-tr.appendTo('#display');
-}); 
-});
-});*/
+$("#addCartButton").click(
+		function() {
+			var productId = $("#productid_select").val();
+			var quantity = $("#quantity_input").val();
+			//add validation for negative quantity
+			var user_mailId = sessionStorage.getItem("user_mailId");
+			var addToCartUrl = "http://localhost:8080/CloudOnlineStore/rest/users/addToCart?mailId=" + user_mailId + "&productId=" + productId +  "&quantity=" + quantity;
+			$.ajax({
+				type: "POST",
+				url: addToCartUrl,
+				contentType: "application/json",
+				success: function(data, textStatus, jqXHR) {
+					alert("Product added to cart");
+				},
+				error: function(textStatus, jqXHR, errorThrown) {
+					alert(textStatus + " " + jqXHR);
+				}
+				});
+		});
