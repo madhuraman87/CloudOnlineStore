@@ -1,8 +1,17 @@
 $( document ).ready(function() {
 	var pageURL = purl();
 	var catalog_name = pageURL.param('catalog');
-	var catalogInfoURL = 'http://localhost:8080/CloudOnlineStore/rest/product/listproducts?catalog=';
+	var catalogInfoURL = 'http://localhost:8080/CloudOnlineStore/rest/product/listproducts?catalog=';	
 	$.getJSON(catalogInfoURL+catalog_name, function(data) {
+		//fill dropdown with product ID values
+		$.each(data, function(index, product) {
+			var productId = product.prodId;
+		     $('#productid_select')
+		          .append($('<option>', { productId : index })
+		          .text(productId));
+		});
+		
+		//display products in catalog
 		$("#mydiv").mrjsontable({	
             columns: [
                 new $.fn.mrjsontablecolumn({
@@ -20,14 +29,14 @@ $( document ).ready(function() {
                 new $.fn.mrjsontablecolumn({
                     heading: "Price",
                     data: "price"
+                }),                
+                new $.fn.mrjsontablecolumn({
+                    heading: "Catalog",
+                    data: "catalog"
                 }),
                 new $.fn.mrjsontablecolumn({
                     heading: "Inventory",
                     data: "inventory"
-                }),
-                new $.fn.mrjsontablecolumn({
-                    heading: "Catalog",
-                    data: "catalog"
                 })
             ],
             data: data
