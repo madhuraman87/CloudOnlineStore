@@ -235,14 +235,27 @@ public class UserDAO
 		return false;	
 	}
 	
-	public void placeOrder(String userEmailId) {		
+	public void placeOrder(final String userEmailId) {		
 		final List<CartItemProductDetail> cipdList = DaoContainer.cartDao.getCartDetails(userEmailId);
 		for(CartItemProductDetail cipd : cipdList ) {
 			DaoContainer.productDao.reduceProductInventory(cipd.getProductId(), cipd.getQuantity());
 		}
+		saveOrderHistory(userEmailId);
 		deleteCart(userEmailId);
 	}
 	
+	private void saveOrderHistory(String userEmailId) {
+		DBObject userDocument = getUserDocument(userEmailId);
+		
+		ArrayList<DBObject> cartList = (ArrayList<DBObject>) userDocument.get("cart");
+		ArrayList<ArrayList<DBObject>> orderHistory = (ArrayList<ArrayList<DBObject>>) userDocument.get("orderHistory");
+		orderHistory.add(cartList);
+		
+		final DBObject queryOptions = new BasicDBObject("mailId", userEmailId);
+		final BasicDBObject updatedInfo = new BasicDBObject("$set", new BasicDBObject("orderHistory", orderHistory));
+		usersCollection.update(queryOptions, updatedInfo);
+	}
+
 	private void deleteCart(String userEmailId) {
 		final DBObject queryOptions = new BasicDBObject("mailId", userEmailId);		
 		final BasicDBObject updatedInfo = new BasicDBObject("$set", new BasicDBObject("cart", new ArrayList<BasicDBObject>()));
