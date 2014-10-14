@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.bson.BasicBSONObject;
+//import org.bson.BasicBSONObject;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -19,7 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
-import edu.sjsu.cmpe282.dto.CartItem;
+//import edu.sjsu.cmpe282.dto.CartItem;
 import edu.sjsu.cmpe282.dto.User;
 
 /**
@@ -92,7 +92,7 @@ public class UserDAO
 					document.put("orderHistory", new ArrayList());
 				 mongoDbUsersCollection.insert(document);
 			}
-		}
+		}	
 		catch (MongoException me) 
 		{
 			me.printStackTrace();
@@ -102,11 +102,11 @@ public class UserDAO
 			se.printStackTrace();
 		}
 		finally{
-			
 			try {
 				stmt.close();
 				connect.close();
-			} catch (SQLException se) {
+			} 
+			catch (SQLException se) {
 				se.printStackTrace();
 			}
 		}

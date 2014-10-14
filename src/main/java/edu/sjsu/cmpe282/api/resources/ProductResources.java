@@ -20,6 +20,7 @@ public class ProductResources {
 	
 	@POST
 	@Path("/addproduct")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addProduct(Product product) throws ClassNotFoundException {
 		
 		return Response.status(201).entity(productdao.addProduct(product)).build();

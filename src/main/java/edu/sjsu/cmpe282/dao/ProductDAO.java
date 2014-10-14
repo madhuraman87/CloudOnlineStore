@@ -125,15 +125,15 @@ public class ProductDAO {
 		return product_list;
 	}
 
-    public Product getProductDetailsByProductId(String productId) {
-        com.mongodb.DBObject productIdFilter = new com.mongodb.BasicDBObject();
+    public List<Product> getProductDetailsByProductId(String productId) {
+    	BasicDBObject productIdFilter = new BasicDBObject();
         productIdFilter.put("prodID", productId);
-        com.mongodb.DBCursor cursor = table.find(productIdFilter);
-
+        
+        List<Product> product_list = new ArrayList<Product>();
         Product product = null;
-
         try {
-            if(cursor.hasNext())
+        	DBCursor cursor = table.find(productIdFilter);
+        	while(cursor.hasNext())
             {
                 BasicDBObject obj = (BasicDBObject)cursor.next();
                 String prodId = obj.getString("prodID");
@@ -149,18 +149,15 @@ public class ProductDAO {
                 product.setPrice(price);
                 product.setInventory(inventory);
                 product.setCatalog(catalog);
+                product_list.add(product);
             }
-
+        	cursor.close();
         }
         catch(com.mongodb.MongoException me)
         {
             me.printStackTrace();
         }
-        finally
-        {
-            cursor.close();
-        }
-
-        return product;
+        
+        return product_list;
     }
 }
