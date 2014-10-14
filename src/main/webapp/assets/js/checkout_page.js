@@ -44,3 +44,23 @@ $( document ).ready(function() {
         });
 	});
 });
+
+$("#PlaceOrderButton").click(
+		function() {
+			var ccn = $("#creditCardInput").val();
+			var userEmailId = sessionStorage.getItem("user_mailId");
+			var placeOrderUrl = "http://localhost:8080/CloudOnlineStore/rest/users/placeOrder?mailId=" + userEmailId + "&ccn=" + ccn;
+			$.ajax({
+				type: "POST",
+				url: placeOrderUrl,
+				contentType: "application/json",
+				success: function(data, textStatus, jqXHR) {
+					alert("Order placed successfully");
+					location.href="Catalog.html";
+				},
+				error: function(textStatus, jqXHR, errorThrown) {
+					alert(textStatus + " " + jqXHR);
+				}
+				});
+		}
+		);
