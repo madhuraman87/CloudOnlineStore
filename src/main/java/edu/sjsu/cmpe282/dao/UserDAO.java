@@ -221,4 +221,16 @@ public class UserDAO
 		}
 	}
 	
+	public boolean orderIsValid(String mailId, String ccn) {
+		boolean orderValid = true;		
+		return orderValid && isCreditCardNumberValid(ccn);
+	}
+	
+	private static boolean isCreditCardNumberValid(String ccn) {
+		return true;
+	}
+	
+	public void placeOrder(String mailId) {
+		
+	}
 }

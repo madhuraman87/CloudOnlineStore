@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import edu.sjsu.cmpe282.dao.CartDAO;
+import edu.sjsu.cmpe282.dao.DaoContainer;
 import edu.sjsu.cmpe282.dao.ProductDAO;
 import edu.sjsu.cmpe282.dao.UserDAO;
 import edu.sjsu.cmpe282.dto.User;
@@ -18,8 +19,8 @@ import edu.sjsu.cmpe282.dto.User;
 @Path("/users")
 public class UserResources {
 
-	private UserDAO userDao = new UserDAO();
-	private CartDAO cartDao = new CartDAO();	
+	private UserDAO userDao = DaoContainer.userDao;
+	private CartDAO cartDao = DaoContainer.cartDao;	
 	
 	@GET
 	@Path("/{param}")
@@ -69,6 +70,14 @@ public class UserResources {
 	@Path("/removeFromCart")	
 	public Response removeFromCart(@QueryParam("mailId") String mailId, @QueryParam("productId") String productId) {
 		userDao.removeItemFromCart(mailId, productId);
+		return Response.status(201).build();		
+	}
+	
+	@POST
+	@Path("/placeOrder")
+	public Response placeOrder(@QueryParam("mailId") String mailId, @QueryParam("ccn") String ccn) {
+		if(userDao.orderIsValid(mailId, ccn))
+			userDao.placeOrder(mailId);
 		return Response.status(201).build();		
 	}
 }
