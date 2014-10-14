@@ -1,21 +1,23 @@
 package edu.sjsu.cmpe282.dao;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
-import edu.sjsu.cmpe282.dto.Product;
-
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+
+import edu.sjsu.cmpe282.dto.Product;
+
 
 public class ProductDAO {
 	
-	private DBCollection table;
+	private DBCollection productCollection;
 	
 	
 	// Constructor with MongoDB connection
@@ -27,7 +29,7 @@ public class ProductDAO {
 			/**** Get database ****/
 			DB db = mongo.getDB("cmpe282db");
 		 
-			table = db.getCollection("products");
+			productCollection = db.getCollection("products");
 		}
 		catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -48,7 +50,7 @@ public class ProductDAO {
 			document.put("price", product.getPrice());
 			document.put("inventory", product.getInventory());
 			document.put("Catalog",product.getCatalog());
-			table.insert(document);			
+			productCollection.insert(document);			
 		}
 		catch (MongoException me) 
 		{
@@ -62,7 +64,7 @@ public class ProductDAO {
 		List<Product> product_list = new ArrayList<Product>();
 		try
 		{
-			DBCursor cursor = table.find();
+			DBCursor cursor = productCollection.find();
 				
 			while(cursor.hasNext()){
 				BasicDBObject obj = (BasicDBObject)cursor.next();
@@ -97,7 +99,7 @@ public class ProductDAO {
 		List<Product> product_list = new ArrayList<Product>();
 		try
 		{
-			DBCursor cursor = table.find(query);
+			DBCursor cursor = productCollection.find(query);
 				
 			while(cursor.hasNext()){
 				BasicDBObject obj = (BasicDBObject)cursor.next();
@@ -131,7 +133,7 @@ public class ProductDAO {
                 
         Product product = null;
         try {
-        	DBCursor cursor = table.find(productIdFilter);
+        	DBCursor cursor = productCollection.find(productIdFilter);
         	while(cursor.hasNext())
             {
                 BasicDBObject obj = (BasicDBObject)cursor.next();
@@ -158,4 +160,17 @@ public class ProductDAO {
         
         return product;
     }
+
+	public void reduceProductInventory(String productId, int quantity) {
+		BasicDBObject documentFindFilter = new BasicDBObject("prodID", productId);
+		
+		DBCursor cursor = productCollection.find(documentFindFilter);
+		if(cursor.hasNext()) {
+			DBObject productDocument = cursor.next();
+			int inventory = (Integer) productDocument.get("inventory");
+			inventory -= quantity;
+			BasicDBObject updatedInfo = new BasicDBObject("$set", new BasicDBObject("inventory", inventory));
+			productCollection.update(documentFindFilter, updatedInfo);
+		}
+	}
 }

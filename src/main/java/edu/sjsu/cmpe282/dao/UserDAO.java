@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -17,6 +18,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
+import edu.sjsu.cmpe282.dto.CartItemProductDetail;
 import edu.sjsu.cmpe282.dto.User;
 
 /**
@@ -29,7 +31,7 @@ public class UserDAO
 	private Statement stmt;
 	private ResultSet rs;
 	
-	private DBCollection mongoDbUsersCollection;
+	private DBCollection usersCollection;
 
 	// Constructor with JDBC connection
 	public UserDAO() 
@@ -55,7 +57,7 @@ public class UserDAO
 		try{			
 			MongoClient mongo = new MongoClient("localhost", 27017);
 			DB db = mongo.getDB("cmpe282db");		 
-			mongoDbUsersCollection = db.getCollection("users");
+			usersCollection = db.getCollection("users");
 		}
 		catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -87,7 +89,7 @@ public class UserDAO
 					document.put("mailId", user.getMailId());
 					document.put("cart", new ArrayList());
 					document.put("orderHistory", new ArrayList());
-				 mongoDbUsersCollection.insert(document);
+				 usersCollection.insert(document);
 			}
 		}	
 		catch (MongoException me) 
@@ -140,7 +142,7 @@ public class UserDAO
 		//find user document
 		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
 		try {
-		DBCursor cursor = mongoDbUsersCollection.find(queryOptions);		
+		DBCursor cursor = usersCollection.find(queryOptions);		
 		//get carts attribute
 		if(cursor.hasNext()) {
 			BasicDBObject userDocument = (BasicDBObject) cursor.next();
@@ -162,7 +164,7 @@ public class UserDAO
 			    cartlist.add(newCartItem);			    
 			}
 				
-			mongoDbUsersCollection.update(queryOptions, new BasicDBObject("$set", new BasicDBObject("cart", cartlist)));
+			usersCollection.update(queryOptions, new BasicDBObject("$set", new BasicDBObject("cart", cartlist)));
 			//db.users.update({mailId:"sandeep@cat.com"}, {$set:{cart: [{productId:"3", quantity: 2}]}})
 		}
 		cursor.close();
@@ -178,7 +180,7 @@ public class UserDAO
 		//find user document
 		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
 		try {
-			DBCursor cursor = mongoDbUsersCollection.find(queryOptions);		
+			DBCursor cursor = usersCollection.find(queryOptions);		
 			//get carts attribute
 			if(cursor.hasNext()) {
 				BasicDBObject userDocument = (BasicDBObject) cursor.next();
@@ -198,7 +200,7 @@ public class UserDAO
 		//find user document
 		final DBObject queryOptions = new BasicDBObject("mailId", mailId);
 		try {
-		DBCursor cursor = mongoDbUsersCollection.find(queryOptions);		
+		DBCursor cursor = usersCollection.find(queryOptions);		
 		//get carts attribute
 		if(cursor.hasNext()) {
 			BasicDBObject userDocument = (BasicDBObject) cursor.next();
@@ -211,7 +213,7 @@ public class UserDAO
 					break;
 				}
 			}
-		mongoDbUsersCollection.update(queryOptions, new BasicDBObject("$set", new BasicDBObject("cart", cartlist)));
+		usersCollection.update(queryOptions, new BasicDBObject("$set", new BasicDBObject("cart", cartlist)));
 		}
 		cursor.close();
 		}
@@ -227,10 +229,34 @@ public class UserDAO
 	}
 	
 	private static boolean isCreditCardNumberValid(String ccn) {
-		return true;
+		if (ccn.length() == 16){
+			return true;
+		}
+		return false;	
 	}
 	
-	public void placeOrder(String mailId) {
-		
+	public void placeOrder(String userEmailId) {		
+		final List<CartItemProductDetail> cipdList = DaoContainer.cartDao.getCartDetails(userEmailId);
+		for(CartItemProductDetail cipd : cipdList ) {
+			DaoContainer.productDao.reduceProductInventory(cipd.getProductId(), cipd.getQuantity());
+		}
+		deleteCart(userEmailId);
 	}
+	
+	private void deleteCart(String userEmailId) {
+		final DBObject queryOptions = new BasicDBObject("mailId", userEmailId);		
+		final BasicDBObject updatedInfo = new BasicDBObject("$set", new BasicDBObject("cart", new ArrayList<BasicDBObject>()));
+		usersCollection.update(queryOptions, updatedInfo);
+	}
+
+	private DBObject getUserDocument(String userEmailId) {
+		final DBObject queryOptions = new BasicDBObject("mailId", userEmailId);
+		final DBCursor cursor = usersCollection.find(queryOptions);
+		if(cursor.hasNext()) {
+			return cursor.next();
+		}
+		return null;
+	}
+	
+	
 }
