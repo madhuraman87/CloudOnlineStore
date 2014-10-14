@@ -1,4 +1,5 @@
 package edu.sjsu.cmpe282.api.resources;
+import edu.sjsu.cmpe282.dao.DaoContainer;
 import edu.sjsu.cmpe282.dao.ProductDAO;
 import edu.sjsu.cmpe282.dto.Product;
 
@@ -16,7 +17,7 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProductResources {
 	
-	private ProductDAO productdao = new ProductDAO();
+	private ProductDAO productdao = DaoContainer.productDao;
 	
 	@POST
 	@Path("/addproduct")

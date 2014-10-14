@@ -8,6 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import edu.sjsu.cmpe282.dao.DaoContainer;
 import edu.sjsu.cmpe282.dao.OrderDAO;
 
 @Path("/order")
@@ -15,9 +16,7 @@ import edu.sjsu.cmpe282.dao.OrderDAO;
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrderResources {
 
-	private OrderDAO orderdao = new OrderDAO();
-	
-	
+	private OrderDAO orderdao = DaoContainer.orderDao;
 	
 	@GET
 	@Path("/orderhistory/{userId}")
