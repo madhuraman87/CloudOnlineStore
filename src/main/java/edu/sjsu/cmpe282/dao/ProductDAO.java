@@ -24,7 +24,7 @@ public class ProductDAO {
 	public ProductDAO() {
 		try{
 			/**** Connect to MongoDB ****/
-			MongoClient mongo = new MongoClient("54.183.154.120",27017);
+			MongoClient mongo = new MongoClient("54.183.198.222",27017);
 		 
 			/**** Get database ****/
 			DB db = mongo.getDB("cmpe282db");
