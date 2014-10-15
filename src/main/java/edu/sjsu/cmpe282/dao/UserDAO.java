@@ -56,7 +56,7 @@ public class UserDAO
 		}
 		
 		try{			
-			MongoClient mongo = new MongoClient("54.183.198.222",27017);
+			MongoClient mongo = new MongoClient("54.183.154.120",27017);
 			DB db = mongo.getDB("cmpe282db");		 
 			usersCollection = db.getCollection("users");
 		}
