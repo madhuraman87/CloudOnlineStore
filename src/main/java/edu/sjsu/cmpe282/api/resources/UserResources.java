@@ -12,7 +12,6 @@ import javax.ws.rs.core.Response;
 
 import edu.sjsu.cmpe282.dao.CartDAO;
 import edu.sjsu.cmpe282.dao.DaoContainer;
-import edu.sjsu.cmpe282.dao.ProductDAO;
 import edu.sjsu.cmpe282.dao.UserDAO;
 import edu.sjsu.cmpe282.dto.User;
 

@@ -21,7 +21,7 @@ public class OrderDAO {
 	public OrderDAO() {
 		try{
 			/**** Connect to MongoDB ****/
-			MongoClient mongo = new MongoClient("localhost", 27017);
+			MongoClient mongo = new MongoClient("54.183.198.222",27017);
 		 
 			/**** Get database ****/
 			DB db = mongo.getDB("cmpe282db");
